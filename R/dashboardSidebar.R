@@ -38,6 +38,21 @@ argonDashSidebar <- function(..., dropdownMenus = NULL, id, brand_url = NULL, br
   if (!is.null(skin)) sidebarCl <- paste0(sidebarCl, " navbar-", skin)
   if (!is.null(background)) sidebarCl <- paste0(sidebarCl, " bg-", background)
   
+  
+  # handle horizontal items
+  # if vertical is FALSE, we need to modify 
+  # ... class to nav instead of nav flex-column
+  # so that items are displayed on the same line
+  items <- list(...)
+  if (!vertical) {
+    for (i in seq_along(items)) {
+      if (items[[i]]$attribs[["class"]] == "nav-wrapper") {
+        items[[i]]$children[[1]]$attribs$class <- "nav" 
+        items[[i]]$children[[1]]$attribs[["aria-orientation"]] <- "horizontal" 
+      }
+    }
+  }
+  
   shiny::tags$nav(
     class = sidebarCl,
     id = id,
@@ -56,16 +71,16 @@ argonDashSidebar <- function(..., dropdownMenus = NULL, id, brand_url = NULL, br
       ),
       # Brand
       shiny::a(
-        class = "navbar-brand pt-0",
+        class = "navbar-brand pt-0 my-0",
         href = brand_url,
         target = "_blank",
         shiny::img(class = "navbar-brand-img", src = brand_logo)
       ),
       # Dropdown Menus
-      shiny::tags$ul(class = "navbar-nav align-items-center d-md-none", dropdownMenus),
+      shiny::tags$ul(class = "nav align-items-center d-md-none", dropdownMenus),
       # Main content
       shiny::tags$div(
-        class = "collapse navbar-collapse", 
+        class = "collapse navbar-collapse my--4", 
         id = "sidenav-collapse-main",
         # sidebar header when collapsed
         shiny::tags$div(
@@ -95,7 +110,7 @@ argonDashSidebar <- function(..., dropdownMenus = NULL, id, brand_url = NULL, br
             )
           )
         ),
-        ...
+        items
       )
     )
   )
@@ -114,7 +129,7 @@ argonDashSidebar <- function(..., dropdownMenus = NULL, id, brand_url = NULL, br
 #' @export
 argonSidebarMenu <- function(...) {
   shiny::tags$div(
-    class = "nav-wrapper",
+    class = "nav-wrapper my--4",
     shiny::tags$div(
       class = "nav flex-column nav-pills", 
       `aria-orientation` = "vertical", 
@@ -132,27 +147,19 @@ argonSidebarMenu <- function(...) {
 #'
 #' @param ... Item name.
 #' @param tabName Should correspond exactly to the tabName given in \code{\link{argonTabItem}}.
-#' @param icon Item icon. 
-#' @param icon_color Icon color.
+#' @param icon Item icon. \link{argonIcon} or \link[shiny]{icon}.
 #' 
 #' @author David Granjon, \email{dgranjon@@ymail.com}
 #'
 #' @export
-argonSidebarItem <- function(..., tabName = NULL, icon = NULL,
-                                 icon_color = NULL) {
-  
-  iconCl <- "ni"
-  if(!is.null(icon)) iconCl <- paste0(iconCl, " ni-", icon)
-  if(!is.null(icon_color)) iconCl <- paste0(iconCl, " text-", icon_color)
-  
-  
+argonSidebarItem <- function(..., tabName = NULL, icon = NULL) {
   shiny::tags$a(
-    class = "nav-link  mt-1 mb-1 shadow",
+    class = "nav-link mt-1 mb-1 mx-2 shadow",
     id = paste0("tab-", tabName),
     href = paste0("#shiny-tab-", tabName),
     `data-toggle` = "tab",
     `data-value` = tabName,
-    shiny::tags$i(class = iconCl),
+    icon,
     ...
   )
 }

@@ -4,9 +4,16 @@
 \alias{argonDashPage}
 \title{Create a Boostrap 4 dashboard page}
 \usage{
-argonDashPage(title = NULL, description = NULL, author = NULL,
-  navbar = NULL, sidebar = NULL, header = NULL, body = NULL,
-  footer = NULL)
+argonDashPage(
+  title = NULL,
+  description = NULL,
+  author = NULL,
+  navbar = NULL,
+  sidebar = NULL,
+  header = NULL,
+  body = NULL,
+  footer = NULL
+)
 }
 \arguments{
 \item{title}{App title.}
@@ -19,7 +26,8 @@ argonDashPage(title = NULL, description = NULL, author = NULL,
 
 \item{sidebar}{Bootstrap 4 dashboard main sidebar.}
 
-\item{header}{Bootstrap 4 dashboard control sidebar (right side).}
+\item{header}{Bootstrap 4 dashboard header (below the navbar). Useful to hightlight elements or
+print a message.}
 
 \item{body}{Bootstrap 4 dashboard body wrapper.}
 
